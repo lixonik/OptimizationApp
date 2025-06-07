@@ -1,0 +1,11 @@
+C:\Repos\OptimizationAppUI\OptimizationCore\bin\Debug\net9.0\OptimizationCore.deps.json
+C:\Repos\OptimizationAppUI\OptimizationCore\bin\Debug\net9.0\OptimizationCore.dll
+C:\Repos\OptimizationAppUI\OptimizationCore\bin\Debug\net9.0\OptimizationCore.pdb
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.AssemblyInfoInputs.cache
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.AssemblyInfo.cs
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.csproj.CoreCompileInputs.cache
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.dll
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\refint\OptimizationCore.dll
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\OptimizationCore.pdb
+C:\Repos\OptimizationAppUI\OptimizationCore\obj\Debug\net9.0\ref\OptimizationCore.dll
