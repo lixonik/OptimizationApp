@@ -1,0 +1,10 @@
+<UserControl x:Class="OptimizationUI.Controls.ShortestPathParamsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StackPanel>
+    <TextBlock Text="Число вершин:"/>
+    <TextBox x:Name="VerticesBox" Text="5"/>
+    <TextBlock Text="Матрица смежности (CSV строка за строкой):" Margin="0,10,0,0"/>
+    <TextBox x:Name="AdjMatrixBox" AcceptsReturn="True" Height="100"/>
+  </StackPanel>
+</UserControl>

@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj",
+      "projectUniqueName": "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj",
       "projectName": "OptimizationCore",
-      "projectPath": "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj",
+      "projectPath": "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj",
       "packagesPath": "C:\\Users\\b.prokhorov\\.nuget\\packages\\",
-      "outputPath": "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\obj\\",
+      "outputPath": "C:\\Repos\\OptimizationApp\\OptimizationCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\b.prokhorov\\AppData\\Roaming\\NuGet\\NuGet.Config"

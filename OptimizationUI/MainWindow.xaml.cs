@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LiveChartsCore;
@@ -11,43 +13,50 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WPF;
 using Microsoft.Win32;
 using OptimizationCore;
+using OptimizationUI.Controls;
+using OptimizationUI.Solvers;
 using Expr = NCalc.Expression;
 
 namespace OptimizationUI
 {
     public partial class MainWindow : Window
     {
+        private readonly ObservableCollection<double> _progressValues = new();
+        public ISeries[] SeriesCollection { get; set; }
+
         private OptimizerParameters _optParams = new();
         private Func<double[], double> _objective = null!;
         private (double Min, double Max)[] _bounds = Array.Empty<(double, double)>();
-        private readonly ObservableCollection<double> _progressValues = new();
-        private readonly List<double[]> _solutions = new();
-        public ISeries[] SeriesCollection { get; set; }
+        private CancellationTokenSource _cts = new();
 
+        // контрол для текущей задачи графовой вкладки
+        private IGraphParams? _currentGraphParams;
+
+        // алгоритмы математической вкладки
         private readonly Dictionary<string, List<ParamItem>> _algoParams = new()
         {
             ["PSO"] = new()
             {
-                new ParamItem("MaxIterations", 100),
-                new ParamItem("SwarmSize", 30),
-                new ParamItem("Inertia", 0.7),
-                new ParamItem("C1", 1.5),
-                new ParamItem("C2", 1.5),
+                new("MaxIterations", 100),
+                new("SwarmSize", 30),
+                new("Inertia", 0.7),
+                new("C1", 1.5),
+                new("C2", 1.5),
             },
             ["SA"] = new()
             {
-                new ParamItem("MaxIterations", 1000),
-                new ParamItem("TempStart", 100),
-                new ParamItem("TempEnd", 1),
-                new ParamItem("CoolingRate", 0.95),
-                new ParamItem("InnerIter", 10),
+                new("MaxIterations", 1000),
+                new("TempStart", 100),
+                new("TempEnd", 1),
+                new("CoolingRate", 0.95),
+                new("InnerIter", 10),
             },
             ["DE"] = new()
             {
-                new ParamItem("MaxIterations", 200),
-                new ParamItem("PopSize", 50),
-                new ParamItem("F", 0.8),
-                new ParamItem("CR", 0.9),
+                new("MaxIterations", 200),
+                new("PopSize", 50),
+                new("F", 0.8),
+                new("CR", 0.9),
             },
         };
 
@@ -55,14 +64,7 @@ namespace OptimizationUI
         {
             InitializeComponent();
 
-            AlgoCombo.ItemsSource = _algoParams.Keys;
-            AlgoCombo.SelectedIndex = 0;
-
-            ParamsGrid.ItemsSource = _algoParams[AlgoCombo.Text];
-            BoundsGrid.ItemsSource = new List<BoundItem>
-            {
-                new() { Min = -5, Max = 5 },
-            };
+            DataContext = this;
 
             SeriesCollection = new ISeries[]
             {
@@ -73,7 +75,70 @@ namespace OptimizationUI
                     GeometrySize = 4,
                 },
             };
-            DataContext = this;
+
+            InitMathTab();
+            // try
+            // {
+            InitGraphTab();
+            // }
+            // catch (Exception ex)
+            // {
+            //     MessageBox.Show(
+            //         $"InitGraphTab threw:\n{ex.GetType().Name}: {ex.Message}\n\n{ex.StackTrace}",
+            //         "InitGraphTab Error",
+            //         MessageBoxButton.OK,
+            //         MessageBoxImage.Error
+            //     );
+            // }
+        }
+
+        private void InitMathTab()
+        {
+            // алгоритмы
+            AlgoCombo.ItemsSource = _algoParams.Keys;
+            AlgoCombo.SelectedIndex = 0;
+
+            // параметры алгоритма
+            ParamsGrid.ItemsSource = _algoParams[AlgoCombo.Text];
+
+            // bounds по умолчанию
+            BoundsGrid.ItemsSource = new List<BoundItem>
+            {
+                new() { Min = -5, Max = 5 },
+            };
+        }
+
+        private void InitGraphTab()
+        {
+            // список задач
+            GraphTaskCombo.ItemsSource = new[]
+            {
+                "Поиск кратчайшего пути",
+                "Задача о раскраске",
+                "Нахождение Эйлерова пути",
+                "Нахождение Эйлерова цикла",
+                "Нахождение Гамильтонова пути",
+                "Нахождение Гамильтонова цикла",
+            };
+            GraphTaskCombo.SelectionChanged += GraphTaskCombo_SelectionChanged;
+            GraphTaskCombo.SelectedIndex = 0;
+        }
+
+        private void GraphTaskCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // подгружаем нужный UserControl в ContentControl GraphParamsHost
+            _currentGraphParams = GraphTaskCombo.SelectedIndex switch
+            {
+                0 => new ShortestPathParamsControl(), // нужно реализовать
+                1 => new ColoringParamsControl(),
+                2 => new EulerPathParamsControl(),
+                3 => new EulerCycleParamsControl(),
+                4 => new HamiltonianPathParamsControl(),
+                5 => new HamiltonianCycleParamsControl(),
+                _ => null,
+            };
+
+            GraphParamsHost.Content = _currentGraphParams as UserControl;
         }
 
         private void AlgoCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,7 +147,7 @@ namespace OptimizationUI
                 ParamsGrid.ItemsSource = _algoParams[algo];
         }
 
-        private void PrepareSettings()
+        private void PrepareMathSettings()
         {
             _optParams = new OptimizerParameters
             {
@@ -105,97 +170,147 @@ namespace OptimizationUI
 
             _objective = x =>
             {
-                for (int i = 0; i < x.Length; i++)
-                    expr.Parameters[$"x{i}"] = x[i];
-                double value = Convert.ToDouble(expr.Evaluate());
-                return maximize ? -value : value;
+                try
+                {
+                    for (int i = 0; i < x.Length; i++)
+                        expr.Parameters[$"x{i}"] = x[i];
+
+                    double val = Convert.ToDouble(expr.Evaluate());
+                    return maximize ? -val : val;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Ошибка в целевой функции: {ex.Message}",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                    throw;
+                }
             };
         }
 
         private async void Start_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                bool maximize = MaximizeBox.IsChecked == true;
+            // Завершаем предыдущие графовые задачи
+            _cts.Cancel();
+            _cts = new CancellationTokenSource();
 
-                PrepareSettings();
-                _progressValues.Clear();
-                _solutions.Clear();
-                Log("Start");
+            _progressValues.Clear();
+
+            if (MainTabControl.SelectedIndex == 0)
+            {
+                // — математическая вкладка
+                PrepareMathSettings();
+                Log("Start math optimization");
 
                 IOptimizer opt = _optParams.Algorithm switch
                 {
                     "PSO" => new PSOOptimizer(),
                     "SA" => new SAOptimizer(),
                     "DE" => new DEOptimizer(),
-                    _ => throw new(),
+                    _ => throw new InvalidOperationException(),
                 };
 
                 var result = await opt.OptimizeAsync(
                     _objective,
                     _bounds,
                     _optParams,
-                    (iter, bestVal) =>
+                    (it, bestVal) =>
+                    {
+                        double shown = (MaximizeBox.IsChecked == true) ? -bestVal : bestVal;
                         Dispatcher.Invoke(() =>
                         {
-                            double shownVal = maximize ? -bestVal : bestVal;
-                            _progressValues.Add(shownVal);
-                            Log($"Iter {iter}: {shownVal:F4}");
-                        })
+                            _progressValues.Add(shown);
+                            Log($"Iter {it}: {shown:F4}");
+                        });
+                    },
+                    _cts.Token
                 );
 
-                _solutions.Add(result.BestSolution);
-                double finalValue = maximize ? -result.BestValue : result.BestValue;
-                Log($"Done! Best = {finalValue:F4}");
+                Log(
+                    $"Done! Best = {(MaximizeBox.IsChecked == true ? -result.BestValue : result.BestValue):F4}"
+                );
             }
-            catch (Exception ex)
+            else
             {
-                Log($"Error: {ex.Message}");
+                // — графовая вкладка
+                if (_currentGraphParams is null)
+                {
+                    MessageBox.Show("Не выбраны параметры графовой задачи");
+                    return;
+                }
+
+                try
+                {
+                    var graph = _currentGraphParams.LoadGraph();
+                    var solver = _currentGraphParams.CreateSolver(_cts.Token);
+                    solver.Progress += (it, state) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            // здесь можно обновлять визуализацию state
+                            Log($"Graph iter {it}");
+                        });
+                    };
+                    Log("Start graph task");
+                    await Task.Run(() => solver.Solve(graph), _cts.Token);
+                    Log("Graph task done");
+                }
+                catch (OperationCanceledException)
+                {
+                    Log("Graph task cancelled");
+                }
+                catch (Exception ex)
+                {
+                    Log($"Error: {ex.Message}");
+                }
             }
         }
 
-        private void Stop_Click(object sender, RoutedEventArgs e) =>
-            Log("Stop pressed (не поддерживается).");
-
-        private void Export_Click(object sender, RoutedEventArgs e)
+        private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog { Filter = "CSV|*.csv|JSON|*.json" };
+            _cts.Cancel();
+            Log("Stop pressed, cancelling...");
+        }
+
+        private void Export_Click(object s, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.SaveFileDialog { Filter = "CSV|*.csv|JSON|*.json" };
             if (dlg.ShowDialog() != true)
                 return;
-
             if (dlg.FileName.EndsWith(".csv"))
             {
-                using var sw = new StreamWriter(dlg.FileName);
-                sw.WriteLine("Iteration,BestValue");
+                using var sw = new System.IO.StreamWriter(dlg.FileName);
+                sw.WriteLine("Iter,Value");
                 for (int i = 0; i < _progressValues.Count; i++)
                     sw.WriteLine($"{i + 1},{_progressValues[i]}");
             }
             else
             {
-                var maximize = MaximizeBox.IsChecked == true;
-                var exportObj = new
+                bool max = MaximizeBox.IsChecked == true;
+                var obj = new
                 {
                     Progress = _progressValues.ToArray(),
-                    Best = maximize ? _solutions.LastOrDefault() : _solutions.LastOrDefault(),
-                    BestValue = maximize
-                        ? -_progressValues.LastOrDefault()
-                        : _progressValues.LastOrDefault(),
+                    Best = max ? _progressValues.Max() : _progressValues.Min(),
                 };
-                File.WriteAllText(
+                System.IO.File.WriteAllText(
                     dlg.FileName,
                     JsonSerializer.Serialize(
-                        exportObj,
-                        options: new JsonSerializerOptions { WriteIndented = true }
+                        obj,
+                        new JsonSerializerOptions { WriteIndented = true }
                     )
                 );
             }
-            Log($"Exported to {dlg.FileName}");
+            Log($"Экспорт: {dlg.FileName}");
         }
 
         private void Log(string msg) =>
             Dispatcher.Invoke(() => LogBox.Items.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {msg}"));
     }
 
+    // вспомогательные классы
     public class ParamItem
     {
         public string Name { get; }

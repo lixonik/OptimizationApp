@@ -964,11 +964,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Repos\\OptimizationAppUI\\OptimizationTests\\OptimizationTests.csproj",
+      "projectUniqueName": "C:\\Repos\\OptimizationApp\\OptimizationTests\\OptimizationTests.csproj",
       "projectName": "OptimizationTests",
-      "projectPath": "C:\\Repos\\OptimizationAppUI\\OptimizationTests\\OptimizationTests.csproj",
+      "projectPath": "C:\\Repos\\OptimizationApp\\OptimizationTests\\OptimizationTests.csproj",
       "packagesPath": "C:\\Users\\b.prokhorov\\.nuget\\packages\\",
-      "outputPath": "C:\\Repos\\OptimizationAppUI\\OptimizationTests\\obj\\",
+      "outputPath": "C:\\Repos\\OptimizationApp\\OptimizationTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\b.prokhorov\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -983,8 +983,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj": {
-              "projectPath": "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj"
+            "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj": {
+              "projectPath": "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj"
             }
           }
         }

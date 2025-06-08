@@ -1,20 +1,20 @@
 ﻿OptimizationUI
-1.0.0.0
+
 
 winexe
 C#
 .cs
-c:\Repos\OptimizationApp\OptimizationUI\obj\Debug\net9.0-windows\
+C:\Repos\OptimizationApp\OptimizationUI\obj\Debug\net9.0-windows\
 OptimizationUI
 none
 false
-TRACE;DEBUG;NET;NET9_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-c:\Repos\OptimizationApp\OptimizationUI\App.xaml
-11407045341
+TRACE;DEBUG;NET;NET9_0;NETCOREAPP
+C:\Repos\OptimizationApp\OptimizationUI\App.xaml
+7-1594129280
 
-6-188496593
-212110749804
-MainWindow.xaml;
+20-411429699
+212-377489477
+Controls\ColoringParamsControl.xaml;Controls\EulerCycleParamsControl.xaml;Controls\EulerPathParamsControl.xaml;Controls\HamiltonianCycleParamsControl.xaml;Controls\HamiltonianPathParamsControl.xaml;Controls\ShortestPathParamsControl.xaml;MainWindow.xaml;
 
 False
 

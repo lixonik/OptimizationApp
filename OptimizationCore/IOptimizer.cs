@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OptimizationCore
@@ -9,7 +10,8 @@ namespace OptimizationCore
             Func<double[], double> objective,
             (double Min, double Max)[] bounds,
             OptimizerParameters parameters,
-            Action<int, double>? progressCallback = null
+            Action<int, double>? progressCallback = null,
+            CancellationToken token = default
         );
     }
 }
