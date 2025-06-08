@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IjNsohYrbZU=",
+  "dgSpecHash": "zH59YZV3E58=",
   "success": true,
-  "projectFilePath": "C:\\Repos\\OptimizationAppUI\\OptimizationUI\\OptimizationUI.csproj",
+  "projectFilePath": "C:\\Repos\\OptimizationApp\\OptimizationUI\\OptimizationUI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\b.prokhorov\\.nuget\\packages\\harfbuzzsharp\\8.3.0.1\\harfbuzzsharp.8.3.0.1.nupkg.sha512",
     "C:\\Users\\b.prokhorov\\.nuget\\packages\\harfbuzzsharp.nativeassets.macos\\8.3.0.1\\harfbuzzsharp.nativeassets.macos.8.3.0.1.nupkg.sha512",

@@ -677,11 +677,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Repos\\OptimizationAppUI\\OptimizationUI\\OptimizationUI.csproj",
+      "projectUniqueName": "C:\\Repos\\OptimizationApp\\OptimizationUI\\OptimizationUI.csproj",
       "projectName": "OptimizationUI",
-      "projectPath": "C:\\Repos\\OptimizationAppUI\\OptimizationUI\\OptimizationUI.csproj",
+      "projectPath": "C:\\Repos\\OptimizationApp\\OptimizationUI\\OptimizationUI.csproj",
       "packagesPath": "C:\\Users\\b.prokhorov\\.nuget\\packages\\",
-      "outputPath": "C:\\Repos\\OptimizationAppUI\\OptimizationUI\\obj\\",
+      "outputPath": "C:\\Repos\\OptimizationApp\\OptimizationUI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\b.prokhorov\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -696,8 +696,8 @@
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "projectReferences": {
-            "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj": {
-              "projectPath": "C:\\Repos\\OptimizationAppUI\\OptimizationCore\\OptimizationCore.csproj"
+            "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj": {
+              "projectPath": "C:\\Repos\\OptimizationApp\\OptimizationCore\\OptimizationCore.csproj"
             }
           }
         }
