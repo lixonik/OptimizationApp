@@ -140,22 +140,19 @@ namespace OptimizationUI
                         {
                             double shownVal = maximize ? -bestVal : bestVal;
                             _progressValues.Add(shownVal);
-                            Log($"Iter {iter}: {shownVal:F4}");
+                            Log($"Iter {iter}: {shownVal}");
                         })
                 );
 
                 _solutions.Add(result.BestSolution);
                 double finalValue = maximize ? -result.BestValue : result.BestValue;
-                Log($"Done! Best = {finalValue:F4}");
+                Log($"Done! Best = {finalValue}");
             }
             catch (Exception ex)
             {
                 Log($"Error: {ex.Message}");
             }
         }
-
-        private void Stop_Click(object sender, RoutedEventArgs e) =>
-            Log("Stop pressed (не поддерживается).");
 
         private void Export_Click(object sender, RoutedEventArgs e)
         {

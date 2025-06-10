@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OptimizationTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7310af4a816ee0ce5b916898b37e669c4ff6215d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b7d80fb84eac9b2df6819ff94721065bab913f91")]
 [assembly: System.Reflection.AssemblyProductAttribute("OptimizationTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OptimizationTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
