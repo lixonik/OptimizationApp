@@ -94,9 +94,16 @@ namespace OptimizationUI
                     ).Value,
             };
 
+            if (_optParams.MaxIterations <= 0)
+            {
+                MessageBox.Show("MaxIterations should be greater than zero.");
+            }
+
             _optParams.Params.Clear();
             foreach (ParamItem pi in ParamsGrid.Items.OfType<ParamItem>())
+            {
                 _optParams.Params[pi.Name] = pi.Value;
+            }
 
             _bounds = BoundsGrid.Items.OfType<BoundItem>().Select(b => (b.Min, b.Max)).ToArray();
 
